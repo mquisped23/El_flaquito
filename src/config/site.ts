@@ -39,8 +39,9 @@ export const site = {
     general:
       'Hola 😊, me gustaría conocer más sobre los productos de charcutería de El Flaquito 🧀🍖. ¿Podrían enviarme su catálogo? 📃',
     hero: 'Hola El Flaquito, quiero solicitar acceso al catálogo para mi negocio.',
-    catalogoPdf: 'Hola, quiero el catálogo completo en PDF.',
     flotante: 'Hola, vengo de la página web y necesito información.',
+    /** Botón "Consultar precio" de cada producto del catálogo. */
+    producto: (nombre: string) => `Hola 😊, me gustaría recibir información y precio de: ${nombre}.`,
   },
 
   social: [

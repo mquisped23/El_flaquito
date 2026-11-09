@@ -19,6 +19,9 @@ const ogImageURL = new URL(site.seo.ogImage, site.url).href;
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<!-- Marca que JS está disponible (las secciones interactivas solo se activan con JS) -->
+<script is:inline>document.documentElement.classList.add('js');</script>
+
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="keywords" content={site.seo.keywords} />

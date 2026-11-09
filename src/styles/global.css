@@ -43,28 +43,6 @@
   width: 100%;
 }
 
-/* ---------- Pestañas del catálogo ---------- */
-.tab-content {
-  display: none;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* ---------- Ocultar scrollbar en sliders horizontales ---------- */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
