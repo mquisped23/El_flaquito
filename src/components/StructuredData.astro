@@ -1,0 +1,29 @@
+---
+/**
+ * Datos estructurados (JSON-LD) para Google. No se ven en la página,
+ * pero ayudan al SEO local (nombre, contacto, dirección y redes).
+ */
+import { site } from '../config/site';
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.name,
+  description: site.seo.description,
+  url: site.url,
+  logo: new URL(site.logo, site.url).href,
+  image: new URL(site.seo.ogImage, site.url).href,
+  telephone: `+${site.contact.whatsapp}`,
+  email: site.contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.contact.address,
+    addressLocality: 'San Juan de Lurigancho',
+    addressRegion: 'Lima',
+    addressCountry: 'PE',
+  },
+  sameAs: site.social.map((red) => red.url),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

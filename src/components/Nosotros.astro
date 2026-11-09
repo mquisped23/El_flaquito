@@ -1,0 +1,83 @@
+---
+/**
+ * Sección "Nuestra Historia" / Tradición.
+ */
+import { site } from '../config/site';
+
+/** Puntos destacados que aparecen debajo del texto. */
+const pilares = [
+  { icono: 'fa-solid fa-bullseye', titulo: 'Enfoque en Calidad', texto: 'Selección rigurosa de materias primas.' },
+  { icono: 'fa-solid fa-handshake', titulo: 'Atención B2B', texto: 'Asesoría personalizada para tu negocio.' },
+];
+---
+
+<section id="nosotros" class="py-16 md:py-24 bg-brand-dark border-y border-brand-gold/10 relative overflow-hidden">
+  <div
+    class="absolute -left-40 top-1/2 transform -translate-y-1/2 w-[30rem] h-[30rem] bg-brand-gold opacity-5 rounded-full blur-[100px] pointer-events-none"
+  >
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      <div class="w-full lg:w-1/2 mt-8 md:mt-0" data-aos="fade-right">
+        <div class="relative w-11/12 sm:w-full max-w-sm sm:max-w-md mx-auto lg:max-w-full">
+          <div
+            class="absolute inset-0 bg-brand-gold translate-x-3 translate-y-3 md:translate-x-6 md:translate-y-6 -z-10 rounded-sm opacity-30"
+          >
+          </div>
+          <img
+            src="/images/cocinero.png"
+            alt={`Carnicero profesional de ${site.name} procesando carne`}
+            loading="lazy"
+            decoding="async"
+            class="rounded-sm shadow-2xl grayscale hover:grayscale-0 transition-all duration-700 object-cover w-full h-[320px] sm:h-[400px] md:h-[500px]"
+          />
+          <div
+            class="absolute -bottom-5 -right-2 md:-right-6 bg-brand-black p-3 md:p-6 rounded-sm border border-brand-gold/30 shadow-2xl flex items-center gap-3 md:gap-4"
+          >
+            <p class="font-heading text-4xl md:text-5xl font-bold text-brand-gold">10+</p>
+            <p class="text-[10px] md:text-xs uppercase tracking-widest text-brand-gray font-semibold leading-tight">
+              Años de<br />experiencia
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full lg:w-1/2 pt-8 md:pt-0" data-aos="fade-left">
+        <div class="w-12 h-1 bg-brand-gold mb-6 hidden md:block"></div>
+        <span class="text-brand-red font-bold tracking-widest uppercase text-sm mb-3 block">Nuestra Historia</span>
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 md:mb-8 leading-tight tracking-wide">
+          Más que proveedores,<br />somos <span class="text-brand-gold italic">socios estratégicos</span>
+        </h2>
+
+        <div class="border-l-[3px] border-brand-red pl-5 md:pl-6 py-1 mb-8 md:mb-10">
+          <p class="text-gray-300 text-base md:text-lg mb-4 leading-relaxed font-light">
+            En <strong class="text-brand-white font-medium">{site.name}</strong>, entendemos que el éxito de tu cocina
+            depende de la calidad de tus insumos. Por eso, nos dedicamos a procesar y distribuir productos cárnicos de
+            alto estándar para el sector gastronómico.
+          </p>
+          <p class="text-gray-300 text-base md:text-lg leading-relaxed font-light">
+            Garantizamos un sabor y textura consistentes en cada lote, respaldados por una logística impecable que nunca
+            dejará tu negocio desabastecido.
+          </p>
+        </div>
+
+        <ul class="space-y-3 md:space-y-4">
+          {
+            pilares.map((p) => (
+              <li class="flex items-center gap-4 bg-brand-black/40 p-3 md:p-4 rounded-sm border border-brand-gold/10 hover:border-brand-gold/30 transition-colors">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold shrink-0 border border-brand-gold/20">
+                  <i class={`${p.icono} text-lg md:text-xl`} />
+                </div>
+                <div>
+                  <h3 class="font-bold text-white tracking-wide text-sm md:text-base">{p.titulo}</h3>
+                  <p class="text-xs md:text-sm text-brand-gray font-light">{p.texto}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

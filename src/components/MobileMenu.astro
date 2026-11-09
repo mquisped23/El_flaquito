@@ -1,0 +1,97 @@
+---
+/**
+ * Menú lateral para móviles. Se abre con el botón "MENÚ" del Navbar.
+ */
+import { site } from '../config/site';
+import { whatsappLink } from '../lib/whatsapp';
+
+const year = new Date().getFullYear();
+---
+
+<div
+  id="nav-overlay"
+  class="fixed inset-0 z-[100] transition-all duration-500 transform translate-x-full opacity-0 pointer-events-none"
+>
+  <div class="absolute inset-0 bg-brand-black/90 backdrop-blur-sm z-[-1]" id="nav-dimmer"></div>
+
+  <div
+    id="nav-panel"
+    class="absolute top-0 right-0 h-full w-full sm:w-[60%] bg-brand-dark border-l border-brand-gold/20 p-8 md:p-10 flex flex-col justify-between shadow-2xl transition-transform duration-500 ease-in-out transform translate-x-full"
+  >
+    <div class="flex items-center justify-between border-b border-brand-gold/20 pb-6">
+      <img src={site.logo} alt={`${site.name} Logo`} class="h-12 w-auto object-contain" />
+      <button
+        id="menu-close"
+        type="button"
+        class="flex flex-col items-center justify-center space-y-1 text-brand-gray hover:text-brand-gold transition-colors duration-300 focus:outline-none"
+        aria-label="Cerrar menú"
+      >
+        <i class="fas fa-times text-3xl"></i>
+      </button>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center">
+      <div class="text-center w-full">
+        <ul class="space-y-8 text-2xl font-heading font-bold text-brand-white tracking-wide">
+          {
+            site.nav.map((item) => (
+              <li>
+                <a href={item.href} class="mobile-nav-link hover:text-brand-gold transition-colors">
+                  {item.mobileLabel}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-12">
+          <a
+            href={whatsappLink(site.whatsappMessages.general)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mobile-nav-link inline-flex items-center gap-2 bg-brand-red text-white px-8 py-4 rounded-sm font-sans font-bold uppercase tracking-widest text-sm hover:bg-brand-redHover transition-colors border border-brand-redHover shadow-lg"
+          >
+            <i class="fa-brands fa-whatsapp text-xl"></i> Cotizar Ahora
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center text-brand-gray text-xs border-t border-brand-gold/10 pt-6">
+      <p>&copy; {year} {site.name}.</p>
+      <p class="mt-1 text-brand-gold">{site.slogan}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const menuOverlay = document.getElementById('nav-overlay');
+  const menuPanel = document.getElementById('nav-panel');
+  const menuDimmer = document.getElementById('nav-dimmer');
+  const toggleBtn = document.getElementById('menu-toggle');
+  const closeBtn = document.getElementById('menu-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function openMenu() {
+    menuOverlay?.classList.remove('translate-x-full', 'opacity-0', 'pointer-events-none');
+    menuPanel?.classList.remove('translate-x-full');
+    document.body.classList.add('overflow-hidden');
+    toggleBtn?.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    menuOverlay?.classList.add('translate-x-full', 'opacity-0', 'pointer-events-none');
+    menuPanel?.classList.add('translate-x-full');
+    document.body.classList.remove('overflow-hidden');
+    toggleBtn?.setAttribute('aria-expanded', 'false');
+  }
+
+  toggleBtn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  menuDimmer?.addEventListener('click', closeMenu);
+  mobileLinks.forEach((link) => link.addEventListener('click', closeMenu));
+
+  // Cerrar con la tecla Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+</script>

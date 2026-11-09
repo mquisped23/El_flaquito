@@ -1,0 +1,55 @@
+---
+/**
+ * Banner de llamada a la acción ("Abastece tu negocio con calidad premium").
+ */
+import { site } from '../config/site';
+import { whatsappLink } from '../lib/whatsapp';
+---
+
+<section
+  class="py-24 md:py-32 relative overflow-hidden bg-brand-black border-t border-brand-gold/20 flex items-center justify-center min-h-[50vh]"
+>
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <img
+      src="/images/background1.png"
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover opacity-20 grayscale"
+    />
+    <div
+      class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-red/10 via-brand-black/90 to-brand-black"
+    >
+    </div>
+    <div class="absolute inset-0 bg-texture opacity-30 mix-blend-overlay"></div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center" data-aos="zoom-in" data-aos-duration="1000">
+    <div class="flex items-center justify-center gap-4 mb-6 opacity-80">
+      <div class="w-12 h-[1px] bg-brand-gold/50"></div>
+      <i class="fa-solid fa-star text-brand-gold text-sm drop-shadow-md"></i>
+      <div class="w-12 h-[1px] bg-brand-gold/50"></div>
+    </div>
+
+    <h2
+      class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white uppercase mb-6 leading-tight tracking-wide drop-shadow-lg"
+    >
+      Abastece tu negocio con <br class="hidden md:block" />
+      <span class="text-brand-gold italic">calidad premium</span>
+    </h2>
+
+    <p class="text-base md:text-xl text-brand-gray mb-10 font-light max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+      Solicita nuestra lista de precios para mayoristas y recibe asesoría personalizada de un ejecutivo de cuenta.
+    </p>
+
+    <a
+      href={whatsappLink(site.whatsappMessages.general)}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center px-8 py-4 md:px-10 md:py-5 text-base md:text-lg font-bold uppercase tracking-widest text-brand-white bg-brand-red rounded-sm hover:bg-brand-redHover transition-all duration-300 shadow-[0_0_30px_rgba(142,22,0,0.4)] hover:shadow-[0_0_50px_rgba(142,22,0,0.6)] hover:-translate-y-1 border border-brand-redHover group"
+    >
+      <i class="fa-brands fa-whatsapp text-2xl md:text-3xl mr-3 group-hover:animate-bounce"></i> Cotizar vía WhatsApp
+    </a>
+  </div>
+</section>

@@ -1,0 +1,83 @@
+---
+/**
+ * Barra de navegación superior (fija). En móvil muestra el botón "MENÚ"
+ * que abre el componente MobileMenu.
+ */
+import { site } from '../config/site';
+import { whatsappLink } from '../lib/whatsapp';
+---
+
+<nav
+  id="navbar"
+  class="fixed w-full z-50 bg-brand-black/80 backdrop-blur-md border-b border-white/5 transition-all duration-300"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20 md:h-24">
+      <a href="#" class="flex-shrink-0 flex items-center focus:outline-none" aria-label="Inicio">
+        <img
+          src={site.logo}
+          alt={`${site.name} Logo`}
+          class="h-12 md:h-16 w-auto object-contain drop-shadow-lg transition-transform duration-300 hover:scale-105"
+        />
+      </a>
+
+      <div class="hidden md:flex items-center space-x-8">
+        {
+          site.nav.map((item) => (
+            <a
+              href={item.href}
+              class="nav-link text-brand-white/90 hover:text-brand-gold font-medium transition-colors text-sm uppercase tracking-widest"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <a
+          href={whatsappLink(site.whatsappMessages.general)}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black px-6 py-2.5 rounded-sm font-semibold transition-all duration-300 text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(197,160,89,0.1)] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)]"
+        >
+          Contacto
+        </a>
+      </div>
+
+      <button
+        id="menu-toggle"
+        type="button"
+        class="md:hidden flex flex-col items-center justify-center space-y-1.5 group focus:outline-none"
+        aria-label="Abrir menú"
+        aria-controls="nav-overlay"
+        aria-expanded="false"
+      >
+        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
+        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
+        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
+        <span
+          class="text-[10px] font-bold tracking-widest mt-1 text-brand-gold group-hover:text-brand-goldHover transition-colors duration-300"
+          >MENÚ</span
+        >
+      </button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Fondo del navbar más sólido al hacer scroll
+  const navbar = document.getElementById('navbar');
+
+  if (navbar) {
+    const updateNavbar = () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('shadow-xl', 'bg-brand-black/95');
+        navbar.classList.remove('bg-brand-black/80');
+      } else {
+        navbar.classList.remove('shadow-xl', 'bg-brand-black/95');
+        navbar.classList.add('bg-brand-black/80');
+      }
+    };
+
+    window.addEventListener('scroll', updateNavbar, { passive: true });
+    updateNavbar();
+  }
+</script>

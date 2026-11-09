@@ -1,0 +1,134 @@
+---
+/**
+ * Sección "Garantía de Excelencia". En móvil funciona como slider automático.
+ * Las tarjetas se editan en src/data/certificaciones.ts
+ */
+import { certificaciones, type CertVariant } from '../data/certificaciones';
+
+const variantes: Record<
+  CertVariant,
+  { card: string; bgIcon: string; icon: string; line: string }
+> = {
+  red: {
+    card: 'bg-[#0d0d0d] border-white/5 hover:border-brand-red/30 hover:shadow-[0_0_30px_rgba(142,22,0,0.15)]',
+    bgIcon: 'text-white/[0.02] group-hover:text-brand-red/[0.05]',
+    icon: 'text-brand-red',
+    line: 'bg-brand-red',
+  },
+  gold: {
+    card: 'bg-gradient-to-b from-[#141414] to-[#0a0a0a] border-brand-gold/20 hover:border-brand-gold/50 hover:shadow-[0_0_40px_rgba(197,160,89,0.15)] transform md:-translate-y-4',
+    bgIcon: 'text-brand-gold/[0.03] group-hover:text-brand-gold/[0.08]',
+    icon: 'text-brand-gold',
+    line: 'bg-brand-gold',
+  },
+  gray: {
+    card: 'bg-[#0d0d0d] border-white/5 hover:border-brand-gray/30 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]',
+    bgIcon: 'text-white/[0.02] group-hover:text-white/[0.05]',
+    icon: 'text-brand-gray',
+    line: 'bg-brand-gray',
+  },
+};
+---
+
+<section id="certificaciones" class="py-24 bg-brand-black relative overflow-hidden">
+  <div class="absolute inset-0 bg-texture opacity-[0.15] mix-blend-overlay pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center mb-12 md:mb-20" data-aos="fade-up">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold uppercase mb-4 tracking-wide">
+        Garantía de <span class="text-brand-gold italic">Excelencia</span>
+      </h2>
+      <div class="w-24 h-1 bg-brand-red mx-auto"></div>
+    </div>
+
+    <div
+      id="cert-slider"
+      class="flex md:grid flex-nowrap overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-6 md:gap-8 lg:gap-10 pb-4 md:pb-0 no-scrollbar md:grid-cols-3 scroll-smooth"
+    >
+      {
+        certificaciones.map((cert, i) => {
+          const v = variantes[cert.variante];
+          return (
+            <div
+              class={`w-full shrink-0 snap-center md:w-auto relative overflow-hidden p-8 md:p-10 border ${v.card} transition-all duration-500 group rounded-sm min-h-[380px] md:min-h-0 flex flex-col`}
+              data-aos="fade-up"
+              data-aos-delay={(i + 1) * 100}
+            >
+              <i
+                class={`${cert.icono} absolute -right-6 -bottom-6 text-9xl ${v.bgIcon} group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 z-0 pointer-events-none`}
+              />
+              <div
+                class={`w-12 h-12 flex items-center justify-center ${v.icon} text-3xl mb-8 relative z-10 transform group-hover:scale-110 transition-transform duration-300`}
+              >
+                <i class={cert.icono} />
+              </div>
+              <h3 class="text-2xl font-heading font-bold mb-3 uppercase tracking-wider text-brand-white relative z-10">
+                {cert.titulo}
+              </h3>
+              <div class={`w-12 h-[2px] ${v.line} mb-5 relative z-10 transition-all duration-500 group-hover:w-24`} />
+              <p class="text-brand-gray text-sm leading-relaxed font-light relative z-10 flex-grow">{cert.descripcion}</p>
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <div id="cert-dots" class="flex md:hidden justify-center items-center space-x-3 mt-6">
+      {
+        certificaciones.map((_, i) => (
+          <div
+            class={
+              i === 0
+                ? 'w-3 h-3 rounded-full bg-brand-gold transition-all duration-300'
+                : 'w-2 h-2 rounded-full bg-brand-gold/30 transition-all duration-300'
+            }
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Slider automático de certificaciones (solo móvil)
+  const certSlider = document.getElementById('cert-slider');
+  const certDots = document.querySelectorAll<HTMLElement>('#cert-dots div');
+  let certInterval: ReturnType<typeof setInterval> | undefined;
+
+  if (certSlider && certDots.length > 0 && window.innerWidth < 768) {
+    const updateCertDots = () => {
+      const activeIndex = Math.round(certSlider.scrollLeft / certSlider.clientWidth);
+
+      certDots.forEach((dot, index) => {
+        dot.className =
+          index === activeIndex
+            ? 'w-3 h-3 rounded-full bg-brand-gold transition-all duration-300'
+            : 'w-2 h-2 rounded-full bg-brand-gold/30 transition-all duration-300';
+      });
+    };
+
+    certSlider.addEventListener('scroll', updateCertDots, { passive: true });
+
+    const autoSlideCert = () => {
+      const slideWidth = certSlider.clientWidth;
+      const maxScroll = certSlider.scrollWidth - slideWidth;
+
+      if (certSlider.scrollLeft >= maxScroll - 10) {
+        certSlider.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        certSlider.scrollTo({ left: certSlider.scrollLeft + slideWidth, behavior: 'smooth' });
+      }
+    };
+
+    const startCertAutoPlay = () => {
+      clearInterval(certInterval);
+      certInterval = setInterval(autoSlideCert, 4500);
+    };
+
+    const stopCertAutoPlay = () => clearInterval(certInterval);
+
+    startCertAutoPlay();
+    certSlider.addEventListener('touchstart', stopCertAutoPlay, { passive: true });
+    certSlider.addEventListener('touchend', startCertAutoPlay, { passive: true });
+  }
+</script>

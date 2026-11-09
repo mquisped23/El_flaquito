@@ -1,0 +1,105 @@
+---
+/**
+ * Pie de página: logo, redes sociales, enlaces y datos de contacto.
+ * Los datos se editan en src/config/site.ts
+ */
+import { site } from '../config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-[#050505] pt-16 pb-8 border-t border-white/5 relative overflow-hidden">
+  <div class="absolute inset-0 bg-texture opacity-10 mix-blend-overlay pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
+      <div class="col-span-1 lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
+        <img
+          src={site.logo}
+          alt={`${site.name} Logo Footer`}
+          loading="lazy"
+          decoding="async"
+          class="h-14 md:h-16 w-auto object-contain mb-6 opacity-90 hover:opacity-100 transition-opacity drop-shadow-md"
+        />
+        <p class="text-brand-gray text-sm mb-6 font-light leading-relaxed">
+          Distribución mayorista de carnes y embutidos para el sector gastronómico. Calidad premium garantizada en cada
+          corte.
+        </p>
+
+        <div class="flex space-x-3">
+          {
+            site.social.map((red) => (
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={red.url}
+                aria-label={`${red.name} de ${site.name}`}
+                class={`w-9 h-9 rounded-sm bg-brand-dark border border-white/10 flex items-center justify-center text-brand-gray ${red.hoverClass} transition-all duration-300`}
+              >
+                <i class={red.icon} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-1 lg:col-span-3 lg:col-start-6" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-brand-white font-heading font-bold uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
+          <span class="w-4 h-[1px] bg-brand-gold"></span> Explorar
+        </h3>
+        <ul class="space-y-3">
+          {
+            site.nav.map((item) => (
+              <li>
+                <a href={item.href} class="text-brand-gray hover:text-brand-gold transition-colors text-sm font-light">
+                  {item.footerLabel}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="col-span-1 md:col-span-2 lg:col-span-4" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-brand-white font-heading font-bold uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
+          <span class="w-4 h-[1px] bg-brand-gold"></span> Contáctanos
+        </h3>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-4 text-brand-gray hover:text-brand-white transition-colors group cursor-default">
+            <div
+              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
+            >
+              <i class="fa-solid fa-location-dot text-brand-gold text-xs"></i>
+            </div>
+            <span class="text-sm font-light mt-1">{site.contact.address}</span>
+          </li>
+          <li class="flex items-center gap-4 text-brand-gray hover:text-brand-white transition-colors group">
+            <div
+              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
+            >
+              <i class="fa-solid fa-envelope text-brand-gold text-xs"></i>
+            </div>
+            <a href={`mailto:${site.contact.email}`} class="text-sm font-light">{site.contact.email}</a>
+          </li>
+          <li class="flex items-center gap-4 text-brand-gray hover:text-brand-white transition-colors group">
+            <div
+              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
+            >
+              <i class="fa-solid fa-phone text-brand-gold text-xs"></i>
+            </div>
+            <a href={`tel:+${site.contact.whatsapp}`} class="text-sm font-light">{site.contact.phoneDisplay}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-brand-gray/40 text-xs font-light tracking-wide text-center md:text-left">
+        &copy; {year} {site.name} - Embutidos Premium. Todos los derechos reservados.
+      </p>
+      <p class="text-brand-gray/50 text-[10px] md:text-xs flex items-center gap-2 font-light tracking-widest uppercase">
+        Exclusivo para <span class="bg-[#141414] px-2 py-1 rounded-sm border border-white/5 font-bold text-brand-gold">B2B</span>
+      </p>
+    </div>
+  </div>
+</footer>
