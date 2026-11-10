@@ -131,7 +131,8 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
 
 <style>
   /* ==================================================================
-     Campo rojo de la marca (rompe la secuencia de fondos oscuros)
+     Fondo: un rojo vino muy oscuro que nace y muere en el negro de las
+     secciones vecinas, con la brasa detrás del mostrador
   ================================================================== */
   .biz {
     position: relative;
@@ -139,8 +140,8 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
     overflow: hidden;
     color: #fbf3ea;
     background:
-      radial-gradient(ellipse 55% 60% at 72% 48%, rgb(176 36 6 / 0.55), transparent 70%),
-      linear-gradient(180deg, #5c0d00 0%, #6f1100 45%, #4a0a00 100%);
+      radial-gradient(ellipse 50% 55% at 70% 55%, rgb(142 22 0 / 0.32), transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #1a0704 16%, #240905 50%, #1a0704 84%, #0a0a0a 100%);
   }
 
   .biz-inner {
@@ -182,7 +183,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
   }
 
   .biz-line--gold .biz-line-in {
-    color: #e2bd73;
+    color: var(--gold);
     font-style: italic;
     font-weight: 600;
     transition-delay: 0.15s;
@@ -270,7 +271,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
     scroll-snap-align: start;
     padding: 0.7rem 1rem;
     border-radius: 999px;
-    background: rgb(0 0 0 / 0.22);
+    background: rgb(255 255 255 / 0.06);
     color: rgb(251 243 234 / 0.75);
     font-size: 0.9375rem;
     font-weight: 500;
@@ -283,7 +284,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
 
   .biz-tab-icon {
     font-size: 0.9rem;
-    color: #e2bd73;
+    color: var(--gold);
   }
 
   .biz-tab-arrow {
@@ -300,7 +301,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
   }
 
   .biz-tab:focus-visible {
-    outline: 2px solid #e2bd73;
+    outline: 2px solid var(--gold);
     outline-offset: 3px;
   }
 
@@ -334,7 +335,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
       display: block;
       margin-left: auto;
       font-size: 1.1rem;
-      color: #e2bd73;
+      color: var(--gold);
       opacity: 0;
       transform: translateX(-12px);
       transition:
@@ -354,11 +355,11 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
 
     .biz-tab[aria-selected='true'] .biz-tab-label {
       font-style: italic;
-      color: #e2bd73;
+      color: var(--gold);
     }
 
     .biz-tab[aria-selected='true'] .biz-tab-icon {
-      color: #e2bd73;
+      color: var(--gold);
       opacity: 1;
     }
 
@@ -496,7 +497,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
     margin-top: 0.9rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #e2bd73;
+    color: var(--gold);
   }
 
   .biz-list-item {
@@ -509,7 +510,7 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
     height: 4px;
     margin-inline: 0.75rem;
     border-radius: 50%;
-    background: rgb(226 189 115 / 0.6);
+    background: rgb(197 160 89 / 0.6);
   }
 
   .biz-info :global(.biz-cta) {
@@ -609,6 +610,8 @@ const layouts: Record<number, { x: string; y: string; r: string; s: number; z: n
         t.tabIndex = on ? 0 : -1;
       });
       panels.forEach((p, k) => p.toggleAttribute('data-active', k === i));
+      // Avisa a la nota de pedido del cierre
+      document.dispatchEvent(new CustomEvent('biz:select', { detail: i }));
       const tab = tabs[i];
       if (focus) tab.focus();
       // En móvil, centra la pestaña elegida en la fila deslizable
