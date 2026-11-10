@@ -1,97 +1,245 @@
 ---
 /**
- * Menú lateral para móviles. Se abre con el botón "MENÚ" del Navbar.
+ * Menú de pantalla completa para móviles. Se abre en círculo desde el
+ * botón "MENÚ" del Navbar (que se transforma en X para cerrarlo).
  */
 import { site } from '../config/site';
 import { whatsappLink } from '../lib/whatsapp';
+import Button from './ui/Button.astro';
 
 const year = new Date().getFullYear();
 ---
 
-<div
-  id="nav-overlay"
-  class="fixed inset-0 z-[100] transition-all duration-500 transform translate-x-full opacity-0 pointer-events-none"
->
-  <div class="absolute inset-0 bg-brand-black/90 backdrop-blur-sm z-[-1]" id="nav-dimmer"></div>
+<div id="nav-overlay" class="menu md:hidden" data-open="false" inert aria-label="Menú" role="dialog" aria-modal="true">
+  <div class="menu-inner">
+    <nav aria-label="Menú móvil">
+      <ul class="menu-links">
+        {
+          site.nav.map((item, i) => (
+            <li class="menu-item" style={`--i: ${i}`}>
+              <a href={item.href} class="menu-link" data-menu-close>
+                {item.mobileLabel}
+                <i class="fa-solid fa-arrow-right menu-link-arrow" aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
 
-  <div
-    id="nav-panel"
-    class="absolute top-0 right-0 h-full w-full sm:w-[60%] bg-brand-dark border-l border-brand-gold/20 p-8 md:p-10 flex flex-col justify-between shadow-2xl transition-transform duration-500 ease-in-out transform translate-x-full"
-  >
-    <div class="flex items-center justify-between border-b border-brand-gold/20 pb-6">
-      <img src={site.logo} alt={`${site.name} Logo`} class="h-12 w-auto object-contain" />
-      <button
-        id="menu-close"
-        type="button"
-        class="flex flex-col items-center justify-center space-y-1 text-brand-gray hover:text-brand-gold transition-colors duration-300 focus:outline-none"
-        aria-label="Cerrar menú"
+    <div class="menu-item menu-actions" style={`--i: ${site.nav.length}`}>
+      <Button href={whatsappLink(site.whatsappMessages.general)} variant="primary" size="lg" icon="fa-brands fa-whatsapp" external data-menu-close>
+        Cotizar ahora
+      </Button>
+      <Button
+        href={encodeURI(site.catalogoPdf.href)}
+        variant="gold"
+        size="lg"
+        icon="fa-solid fa-file-pdf"
+        trailingIcon="fa-solid fa-arrow-down"
+        download
+        sublabel={`PDF · ${site.catalogoPdf.peso}`}
       >
-        <i class="fas fa-times text-3xl"></i>
-      </button>
+        Descargar catálogo
+      </Button>
     </div>
 
-    <div class="flex-grow flex items-center justify-center">
-      <div class="text-center w-full">
-        <ul class="space-y-8 text-2xl font-heading font-bold text-brand-white tracking-wide">
-          {
-            site.nav.map((item) => (
-              <li>
-                <a href={item.href} class="mobile-nav-link hover:text-brand-gold transition-colors">
-                  {item.mobileLabel}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-        <div class="mt-12">
-          <a
-            href={whatsappLink(site.whatsappMessages.general)}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mobile-nav-link inline-flex items-center gap-2 bg-brand-red text-white px-8 py-4 rounded-sm font-sans font-bold uppercase tracking-widest text-sm hover:bg-brand-redHover transition-colors border border-brand-redHover shadow-lg"
-          >
-            <i class="fa-brands fa-whatsapp text-xl"></i> Cotizar Ahora
-          </a>
-        </div>
+    <div class="menu-item menu-foot" style={`--i: ${site.nav.length + 1}`}>
+      <a href={`tel:+${site.contact.whatsapp}`} class="text-brand-white text-lg font-heading">{site.contact.phoneDisplay}</a>
+      <div class="mt-4 flex gap-3">
+        {
+          site.social.map((red) => (
+            <a
+              href={red.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${red.name} de ${site.name}`}
+              class="grid h-11 w-11 place-items-center rounded-sm border border-white/10 bg-white/[0.04] text-brand-gray transition-colors hover:border-brand-gold hover:text-brand-gold"
+            >
+              <i class={red.icon} aria-hidden="true" />
+            </a>
+          ))
+        }
       </div>
-    </div>
-
-    <div class="text-center text-brand-gray text-xs border-t border-brand-gold/10 pt-6">
-      <p>&copy; {year} {site.name}.</p>
-      <p class="mt-1 text-brand-gold">{site.slogan}</p>
+      <p class="mt-6 text-xs text-brand-gray">&copy; {year} {site.name} · <span class="text-brand-gold">{site.slogan}</span></p>
     </div>
   </div>
 </div>
 
+<style>
+  .menu {
+    --ox: calc(100% - 2.5rem);
+    --oy: 2.5rem;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    overflow-y: auto;
+    background-color: #0d0b0a;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 85% 100%, rgb(142 22 0 / 0.35), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 0% 0%, rgb(197 160 89 / 0.08), transparent 70%);
+    clip-path: circle(0% at var(--ox) var(--oy));
+    visibility: hidden;
+    transition:
+      clip-path 0.7s var(--ease-in-out),
+      visibility 0s linear 0.7s;
+  }
+
+  .menu[data-open='true'] {
+    clip-path: circle(150% at var(--ox) var(--oy));
+    visibility: visible;
+    transition:
+      clip-path 0.8s var(--ease-in-out),
+      visibility 0s;
+  }
+
+  .menu-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    min-height: 100%;
+    padding: 7rem 1.5rem 2.5rem;
+  }
+
+  .menu-links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: #f9fafb;
+    border-bottom: 1px solid rgb(255 255 255 / 0.07);
+    transition: color 0.3s ease;
+  }
+
+  .menu-link:hover,
+  .menu-link:focus-visible {
+    color: var(--gold);
+  }
+
+  .menu-link:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .menu-link-arrow {
+    font-size: 1.1rem;
+    color: var(--gold);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .menu-link:hover .menu-link-arrow {
+    transform: translateX(6px);
+  }
+
+  .menu-actions {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .menu-actions :global(.btn) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .menu-actions :global(.btn-trail) {
+    margin-left: auto;
+  }
+
+  .menu-foot {
+    margin-top: auto;
+  }
+
+  /* Entrada en cascada al abrir */
+  .menu-item {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .menu[data-open='true'] .menu-item {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s var(--ease-out),
+      transform 0.8s var(--ease-out);
+    transition-delay: calc(0.25s + var(--i) * 0.07s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu[data-open='true'] {
+      clip-path: none;
+      transition: visibility 0s;
+    }
+
+    .menu:not([data-open='true']) {
+      display: none;
+    }
+
+    .menu-item,
+    .menu[data-open='true'] .menu-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
 <script>
-  const menuOverlay = document.getElementById('nav-overlay');
-  const menuPanel = document.getElementById('nav-panel');
-  const menuDimmer = document.getElementById('nav-dimmer');
-  const toggleBtn = document.getElementById('menu-toggle');
-  const closeBtn = document.getElementById('menu-close');
-  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+  const menu = document.getElementById('nav-overlay');
+  const toggle = document.getElementById('menu-toggle');
 
-  function openMenu() {
-    menuOverlay?.classList.remove('translate-x-full', 'opacity-0', 'pointer-events-none');
-    menuPanel?.classList.remove('translate-x-full');
-    document.body.classList.add('overflow-hidden');
-    toggleBtn?.setAttribute('aria-expanded', 'true');
+  if (menu && toggle) {
+    const background = () =>
+      Array.from(document.body.children).filter(
+        (el) => el !== menu && el.id !== 'navbar' && el.tagName !== 'SCRIPT',
+      ) as HTMLElement[];
+
+    const setOpen = (open: boolean) => {
+      // El círculo se abre desde el botón
+      const r = toggle.getBoundingClientRect();
+      menu.style.setProperty('--ox', `${r.left + r.width / 2}px`);
+      menu.style.setProperty('--oy', `${r.top + r.height / 2}px`);
+
+      menu.dataset.open = String(open);
+      menu.inert = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      document.documentElement.dataset.menuOpen = String(open);
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+      background().forEach((el) => (el.inert = open));
+
+      if (open) {
+        document.getElementById('navbar')?.setAttribute('data-hidden', 'false');
+        setTimeout(() => menu.querySelector<HTMLElement>('.menu-link')?.focus({ preventScroll: true }), 350);
+      }
+    };
+
+    toggle.addEventListener('click', () => setOpen(menu.dataset.open !== 'true'));
+    menu.querySelectorAll('[data-menu-close]').forEach((el) => el.addEventListener('click', () => setOpen(false)));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu.dataset.open === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Si la pantalla pasa a escritorio con el menú abierto, se cierra
+    window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
   }
-
-  function closeMenu() {
-    menuOverlay?.classList.add('translate-x-full', 'opacity-0', 'pointer-events-none');
-    menuPanel?.classList.add('translate-x-full');
-    document.body.classList.remove('overflow-hidden');
-    toggleBtn?.setAttribute('aria-expanded', 'false');
-  }
-
-  toggleBtn?.addEventListener('click', openMenu);
-  closeBtn?.addEventListener('click', closeMenu);
-  menuDimmer?.addEventListener('click', closeMenu);
-  mobileLinks.forEach((link) => link.addEventListener('click', closeMenu));
-
-  // Cerrar con la tecla Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
-  });
 </script>

@@ -9,7 +9,7 @@
 export const site = {
   name: 'El Flaquito',
   url: 'https://www.elflaquito.com',
-  logo: '/images/logo-sin-fondo.png',
+  logo: '/images/logo-sin-fondo.webp',
   slogan: 'Sabor Peruano y Natural',
 
   seo: {
@@ -21,7 +21,7 @@ export const site = {
     ogTitle: 'El Flaquito | Carnes y Embutidos Premium',
     ogDescription:
       'Abastece tu restaurante con nuestro catálogo de carnes y embutidos de alta gama. Solicita tu cotización.',
-    ogImage: '/images/logo-sin-fondo.png',
+    ogImage: '/images/logo-sin-fondo.webp',
     locale: 'es_PE',
   },
 
@@ -32,6 +32,13 @@ export const site = {
     phoneDisplay: '+51 914 226 204',
     email: 'charcuteria.flaquito@gmail.com',
     address: 'AV LOS EUCALIPTOS 298 MZ C LT 22 SUB LT 22A URB. CANTO BELLO S.J.L',
+  },
+
+  /** Catálogo PDF descargable (archivo en /public/catalogo/). */
+  catalogoPdf: {
+    href: '/catalogo/CATALAGO EL FLAQUITO.pdf',
+    /** Se muestra en el botón para que el usuario sepa cuánto pesa. */
+    peso: '26 MB',
   },
 
   /** Mensajes predeterminados que se envían por WhatsApp desde cada botón. */

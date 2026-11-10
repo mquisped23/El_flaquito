@@ -1,0 +1,71 @@
+---
+/**
+ * Botón/enlace del sitio. Estilos en src/styles/global.css (sección BOTONES).
+ *
+ * Ejemplo:
+ *   <Button href="..." variant="primary" icon="fa-brands fa-whatsapp" external>Cotizar</Button>
+ *   <Button href="/archivo.pdf" variant="gold" icon="fa-solid fa-file-pdf" download sublabel="PDF · 26 MB">Descargar</Button>
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+  href: string;
+  variant?: 'primary' | 'gold';
+  size?: 'sm' | 'md' | 'lg';
+  /** Ícono de Font Awesome a la izquierda (ej. 'fa-brands fa-whatsapp'). */
+  icon?: string;
+  /** Ícono de Font Awesome a la derecha (ej. 'fa-solid fa-arrow-right'). */
+  trailingIcon?: string;
+  /** Abre en otra pestaña (WhatsApp, redes). */
+  external?: boolean;
+  /** Descarga el archivo en vez de abrirlo. */
+  download?: boolean | string;
+  /** Texto pequeño debajo de la etiqueta. */
+  sublabel?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  trailingIcon,
+  external = false,
+  download,
+  sublabel,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn-${variant}`, `btn-${size}`, className]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  download={download === true ? '' : download || undefined}
+  {...rest}
+>
+  {
+    icon && (
+      <span class="btn-icon" aria-hidden="true">
+        <i class={icon} />
+      </span>
+    )
+  }
+  {
+    sublabel ? (
+      <span class="btn-label">
+        <span>
+          <slot />
+        </span>
+        <span class="btn-sub">{sublabel}</span>
+      </span>
+    ) : (
+      <span>
+        <slot />
+      </span>
+    )
+  }
+  {trailingIcon && <i class:list={['btn-trail', trailingIcon]} aria-hidden="true" />}
+</a>

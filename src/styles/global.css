@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --gold: #c5a059;
+  --gold-hi: #dfb668;
+  --red: #8e1600;
+  --red-hi: #a61a00;
+}
+
 /* ---------- Scrollbar personalizado ---------- */
 ::-webkit-scrollbar {
   width: 8px;
@@ -20,29 +29,6 @@
   background: #a61a00;
 }
 
-/* ---------- Subrayado animado del navbar ---------- */
-.nav-link {
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background-color: #c5a059;
-  visibility: hidden;
-  transition: all 0.3s ease-in-out;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  visibility: visible;
-  width: 100%;
-}
-
 /* ---------- Ocultar scrollbar en sliders horizontales ---------- */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -51,4 +37,227 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ==================================================================
+   BOTONES  (componente: src/components/ui/Button.astro)
+   Variantes: .btn-primary (rojo, acción principal)
+              .btn-gold    (contorno dorado que se llena al pasar el mouse)
+   Tamaños:   .btn-sm · .btn-md · .btn-lg
+================================================================== */
+.btn {
+  --btn-pad-y: 0.875rem;
+  --btn-pad-x: 1.375rem;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  overflow: hidden;
+  border-radius: 3px;
+  font-family: Inter, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.btn-sm {
+  --btn-pad-y: 0.625rem;
+  --btn-pad-x: 1.125rem;
+  font-size: 0.75rem;
+}
+
+.btn-lg {
+  --btn-pad-y: 1.05rem;
+  --btn-pad-x: 1.75rem;
+  font-size: 0.875rem;
+}
+
+.btn > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Brillo que cruza el botón al pasar el mouse */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.32) 48%, rgb(255 255 255 / 0.08) 56%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.9s var(--ease-out);
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  transform: translateX(130%);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.12s;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* Ícono en su casilla */
+.btn-icon {
+  display: grid;
+  place-items: center;
+  width: 2em;
+  height: 2em;
+  margin-block: -0.5em;
+  margin-left: calc(var(--btn-pad-x) * -0.45);
+  border-radius: 2px;
+  font-size: 1.2em;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.btn:hover .btn-icon {
+  transform: rotate(-8deg) scale(1.12);
+}
+
+.btn-trail {
+  font-size: 0.95em;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.btn:hover .btn-trail {
+  transform: translateX(4px);
+}
+
+.btn-trail.fa-arrow-down {
+  transition: transform 0.45s var(--ease-out);
+}
+
+.btn:hover .btn-trail.fa-arrow-down {
+  transform: translateY(3px);
+}
+
+/* Texto con subtítulo (ej. "PDF · 26 MB") */
+.btn-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3em;
+}
+
+.btn-sub {
+  font-size: 0.72em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  opacity: 0.75;
+}
+
+/* ---------- Primario: rojo con relieve ---------- */
+.btn-primary {
+  color: #fff;
+  background-color: var(--red);
+  background-image: linear-gradient(180deg, #b52608 0%, var(--red) 55%, #741200 100%);
+  border: 1px solid #b52608;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -2px 0 rgb(0 0 0 / 0.28),
+    0 1px 2px rgb(0 0 0 / 0.5),
+    0 12px 28px -14px rgb(166 26 0 / 0.95);
+}
+
+.btn-primary .btn-icon {
+  background: rgb(0 0 0 / 0.24);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+}
+
+.btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.26),
+    inset 0 -2px 0 rgb(0 0 0 / 0.28),
+    0 2px 4px rgb(0 0 0 / 0.5),
+    0 18px 40px -14px rgb(214 48 10 / 0.95);
+}
+
+/* ---------- Dorado: contorno que se llena ---------- */
+.btn-gold {
+  color: var(--gold);
+  background-color: rgb(10 10 10 / 0.55);
+  border: 1px solid rgb(197 160 89 / 0.65);
+  box-shadow:
+    inset 0 1px 0 rgb(223 182 104 / 0.18),
+    0 10px 24px -16px rgb(0 0 0 / 0.9);
+}
+
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, #e6c27a 0%, var(--gold) 60%, #a9853f 100%);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.btn-gold:hover {
+  color: #0a0a0a;
+  border-color: var(--gold-hi);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    0 16px 34px -16px rgb(197 160 89 / 0.85);
+}
+
+.btn-gold:hover::after {
+  transform: scaleY(1);
+}
+
+.btn-gold .btn-icon {
+  background: rgb(197 160 89 / 0.14);
+  transition:
+    transform 0.45s var(--ease-out),
+    background-color 0.3s ease;
+}
+
+.btn-gold:hover .btn-icon {
+  background: rgb(10 10 10 / 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn::before,
+  .btn::after,
+  .btn-icon,
+  .btn-trail {
+    transition-duration: 0.01ms !important;
+  }
+
+  .btn:hover,
+  .btn:hover .btn-icon,
+  .btn:hover .btn-trail {
+    transform: none;
+  }
+
+  .btn::before {
+    display: none;
+  }
 }

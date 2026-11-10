@@ -12,6 +12,7 @@
 import { productos, nombreCompleto } from '../../data/productos';
 import { site } from '../../config/site';
 import { whatsappLink } from '../../lib/whatsapp';
+import Button from '../ui/Button.astro';
 
 /** Grados que gira la rueda entre un producto y el siguiente. */
 const ANGLE = 44;
@@ -108,16 +109,17 @@ const dots = productos.map((_, k) => {
                   ))}
                 </dl>
 
-                <a
+                <Button
                   href={whatsappLink(site.whatsappMessages.producto(nombre))}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="cat-cta inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-sm bg-brand-red border border-brand-redHover text-white text-xs sm:text-sm font-bold uppercase tracking-widest transition-colors duration-200 hover:bg-brand-redHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-gold"
+                  variant="primary"
+                  icon="fa-brands fa-whatsapp"
+                  trailingIcon="fa-solid fa-arrow-right"
+                  external
+                  class="cat-cta"
                   aria-label={`Consultar precio de ${nombre} por WhatsApp`}
                 >
-                  <i class="fa-brands fa-whatsapp text-lg" aria-hidden="true" />
                   Consultar precio
-                </a>
+                </Button>
               </div>
             </div>
 
@@ -262,7 +264,8 @@ const dots = productos.map((_, k) => {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 28px 32px rgb(0 0 0 / 0.65));
+    /* Sin filter: drop-shadow — se recalculaba en cada frame mientras la imagen gira.
+       La sombra la pone .cat-floor (degradado estático). */
   }
 
   /* ---------- Tipografía ---------- */
@@ -310,8 +313,12 @@ const dots = productos.map((_, k) => {
   }
 
   @media (max-width: 1023px) {
-    .cat-cta {
+    :global(.cat-cta) {
       flex: 1 1 100%;
+    }
+
+    :global(.cat-cta .btn-trail) {
+      margin-left: auto;
     }
   }
 
@@ -342,12 +349,12 @@ const dots = productos.map((_, k) => {
 
   .cat-floor {
     position: absolute;
-    left: 12%;
-    right: 12%;
-    bottom: 2%;
-    height: 9%;
+    left: 8%;
+    right: 8%;
+    bottom: 0;
+    height: 15%;
     border-radius: 50%;
-    background: radial-gradient(closest-side at center, rgb(0 0 0 / 0.7), transparent);
+    background: radial-gradient(closest-side at center, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.4) 55%, transparent);
   }
 
   .cat-ring {
@@ -444,11 +451,9 @@ const dots = productos.map((_, k) => {
   :global(html.js) .cat-copy > * {
     opacity: 0;
     transform: translateY(18px);
-    filter: blur(8px);
     transition:
       opacity 0.25s ease,
-      transform 0.25s ease,
-      filter 0.25s ease;
+      transform 0.25s ease;
   }
 
   :global(html.js) [data-state='past'] .cat-copy > * {
@@ -458,11 +463,9 @@ const dots = productos.map((_, k) => {
   :global(html.js) [data-state='active'] .cat-copy > * {
     opacity: 1;
     transform: none;
-    filter: none;
     transition:
       opacity 0.7s var(--ease-out) calc(0.35s + var(--i, 0) * 0.08s),
-      transform 0.9s var(--ease-out) calc(0.35s + var(--i, 0) * 0.08s),
-      filter 0.7s var(--ease-out) calc(0.35s + var(--i, 0) * 0.08s);
+      transform 0.9s var(--ease-out) calc(0.35s + var(--i, 0) * 0.08s);
   }
 
   /* ---------- Riel ---------- */

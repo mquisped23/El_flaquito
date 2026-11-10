@@ -1,83 +1,457 @@
 ---
 /**
- * Barra de navegación superior (fija). En móvil muestra el botón "MENÚ"
- * que abre el componente MobileMenu.
+ * Barra de navegación superior.
+ * - Entrada: el logo cae como un sello y los enlaces aparecen en cascada.
+ * - Sobre el hero es transparente; al bajar se compacta con fondo sólido.
+ * - Se oculta al bajar y reaparece al subir.
+ * - Un subrayado dorado sigue al mouse y marca la sección visible.
+ * - En móvil el botón "MENÚ" abre MobileMenu y se transforma en X.
  */
 import { site } from '../config/site';
 import { whatsappLink } from '../lib/whatsapp';
+import Button from './ui/Button.astro';
 ---
 
-<nav
-  id="navbar"
-  class="fixed w-full z-50 bg-brand-black/80 backdrop-blur-md border-b border-white/5 transition-all duration-300"
->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-20 md:h-24">
-      <a href="#" class="flex-shrink-0 flex items-center focus:outline-none" aria-label="Inicio">
-        <img
-          src={site.logo}
-          alt={`${site.name} Logo`}
-          class="h-12 md:h-16 w-auto object-contain drop-shadow-lg transition-transform duration-300 hover:scale-105"
-        />
-      </a>
+<header id="navbar" class="nav" data-scrolled="false" data-hidden="false">
+  <div class="nav-inner mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <a href="#inicio" class="nav-logo" aria-label={`${site.name}, ir al inicio`}>
+      <span class="nav-logo-ring" aria-hidden="true"></span>
+      <img src={site.logo} alt="" width="986" height="820" class="nav-logo-img" />
+    </a>
 
-      <div class="hidden md:flex items-center space-x-8">
+    <nav class="hidden md:flex items-center gap-10" aria-label="Principal">
+      <ul class="nav-links relative flex items-center gap-9" data-nav-links>
         {
-          site.nav.map((item) => (
-            <a
-              href={item.href}
-              class="nav-link text-brand-white/90 hover:text-brand-gold font-medium transition-colors text-sm uppercase tracking-widest"
-            >
-              {item.label}
-            </a>
+          site.nav.map((item, i) => (
+            <li class="nav-item" style={`--i: ${i}`}>
+              <a href={item.href} class="nav-link" data-spy={item.href.slice(1)}>
+                {item.label}
+              </a>
+            </li>
           ))
         }
-        <a
-          href={whatsappLink(site.whatsappMessages.general)}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black px-6 py-2.5 rounded-sm font-semibold transition-all duration-300 text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(197,160,89,0.1)] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)]"
-        >
+        <span class="nav-indicator" aria-hidden="true" data-nav-indicator></span>
+      </ul>
+      <div class="nav-item" style={`--i: ${site.nav.length}`}>
+        <Button href={whatsappLink(site.whatsappMessages.general)} variant="gold" size="sm" icon="fa-brands fa-whatsapp" external>
           Contacto
-        </a>
+        </Button>
       </div>
+    </nav>
 
-      <button
-        id="menu-toggle"
-        type="button"
-        class="md:hidden flex flex-col items-center justify-center space-y-1.5 group focus:outline-none"
-        aria-label="Abrir menú"
-        aria-controls="nav-overlay"
-        aria-expanded="false"
-      >
-        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
-        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
-        <div class="w-8 h-0.5 bg-brand-gold group-hover:bg-brand-goldHover transition-colors duration-300"></div>
-        <span
-          class="text-[10px] font-bold tracking-widest mt-1 text-brand-gold group-hover:text-brand-goldHover transition-colors duration-300"
-          >MENÚ</span
-        >
-      </button>
-    </div>
+    <button
+      id="menu-toggle"
+      type="button"
+      class="nav-burger md:hidden"
+      aria-label="Abrir menú"
+      aria-controls="nav-overlay"
+      aria-expanded="false"
+    >
+      <span class="nav-burger-bars" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="nav-burger-text" aria-hidden="true">Menú</span>
+    </button>
   </div>
-</nav>
+
+  <span class="nav-progress" aria-hidden="true" data-nav-progress></span>
+</header>
+
+<style>
+  .nav {
+    --nav-h: 5rem;
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: var(--nav-h);
+    color: #f9fafb;
+    transition:
+      height 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out),
+      background-color 0.4s ease,
+      box-shadow 0.4s ease;
+    /* backwards: al terminar, la animación suelta transform (necesario para ocultar la barra) */
+    animation: nav-in 0.9s var(--ease-out) backwards;
+  }
+
+  /* Velo superior para que el menú se lea sobre el hero */
+  .nav::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -2.5rem;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgb(10 10 10 / 0.75), rgb(10 10 10 / 0));
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .nav {
+      --nav-h: 6.5rem;
+    }
+  }
+
+  .nav[data-scrolled='true'] {
+    --nav-h: 4.25rem;
+    background-color: rgb(10 10 10 / 0.94);
+    box-shadow:
+      0 1px 0 rgb(197 160 89 / 0.12),
+      0 18px 40px -24px rgb(0 0 0 / 0.9);
+  }
+
+  @media (min-width: 768px) {
+    .nav[data-scrolled='true'] {
+      --nav-h: 5rem;
+    }
+  }
+
+  .nav[data-scrolled='true']::before {
+    opacity: 0;
+  }
+
+  .nav[data-hidden='true'] {
+    transform: translateY(-110%);
+  }
+
+  @keyframes nav-in {
+    from {
+      transform: translateY(-100%);
+    }
+  }
+
+  /* ---------- Logo: cae como un sello ---------- */
+  .nav-logo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding-block: 0.75rem;
+    border-radius: 999px;
+  }
+
+  .nav-logo:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+  }
+
+  .nav-logo-img {
+    width: auto;
+    height: 100%;
+    max-height: 4.25rem;
+    filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.6));
+    transition: transform 0.5s var(--ease-out);
+    animation: stamp 0.9s var(--ease-out) 0.35s backwards;
+  }
+
+  .nav-logo:hover .nav-logo-img {
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  .nav-logo-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3.5rem;
+    aspect-ratio: 1;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    animation: stamp-ring 0.9s var(--ease-out) 0.75s both;
+    pointer-events: none;
+  }
+
+  @keyframes stamp {
+    0% {
+      opacity: 0;
+      transform: scale(2.3) rotate(-24deg);
+      filter: blur(6px) drop-shadow(0 30px 30px rgb(0 0 0 / 0));
+    }
+    60% {
+      opacity: 1;
+      filter: blur(0) drop-shadow(0 6px 14px rgb(0 0 0 / 0.6));
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes stamp-ring {
+    0% {
+      opacity: 0.9;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(2.2);
+    }
+  }
+
+  /* ---------- Enlaces ---------- */
+  .nav-item {
+    animation: rise 0.8s var(--ease-out) both;
+    animation-delay: calc(0.55s + var(--i) * 0.08s);
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+  }
+
+  .nav-link {
+    position: relative;
+    display: block;
+    padding-block: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(249 250 251 / 0.82);
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current='true'] {
+    color: #f9fafb;
+  }
+
+  .nav-link:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Subrayado que se desliza entre enlaces */
+  .nav-indicator {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: var(--w, 0px);
+    background: var(--gold);
+    box-shadow: 0 0 12px rgb(197 160 89 / 0.7);
+    opacity: var(--o, 0);
+    transform: translateX(var(--x, 0px));
+    transition:
+      transform 0.55s var(--ease-out),
+      width 0.55s var(--ease-out),
+      opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  /* ---------- Progreso de la página ---------- */
+  .nav-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .nav[data-scrolled='true'] .nav-progress {
+    opacity: 1;
+  }
+
+  /* ---------- Botón hamburguesa ---------- */
+  .nav-burger {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    color: var(--gold);
+    animation: rise 0.8s var(--ease-out) 0.6s both;
+  }
+
+  @media (min-width: 768px) {
+    .nav-burger {
+      display: none;
+    }
+  }
+
+  .nav-burger:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .nav-burger-bars {
+    position: relative;
+    display: block;
+    width: 2rem;
+    height: 1rem;
+  }
+
+  .nav-burger-bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 0.5s var(--ease-out),
+      opacity 0.3s ease,
+      width 0.4s var(--ease-out);
+  }
+
+  .nav-burger-bars span:nth-child(1) {
+    top: 0;
+  }
+
+  .nav-burger-bars span:nth-child(2) {
+    top: calc(50% - 1px);
+    width: 70%;
+    left: auto;
+    right: 0;
+  }
+
+  .nav-burger-bars span:nth-child(3) {
+    bottom: 0;
+  }
+
+  .nav-burger:hover .nav-burger-bars span:nth-child(2) {
+    width: 100%;
+  }
+
+  .nav-burger[aria-expanded='true'] .nav-burger-bars span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .nav-burger[aria-expanded='true'] .nav-burger-bars span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  .nav-burger[aria-expanded='true'] .nav-burger-bars span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .nav-burger-text {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav,
+    .nav-logo-img,
+    .nav-logo-ring,
+    .nav-item,
+    .nav-burger {
+      animation: none;
+    }
+
+    .nav-logo-ring {
+      display: none;
+    }
+  }
+</style>
 
 <script>
-  // Fondo del navbar más sólido al hacer scroll
-  const navbar = document.getElementById('navbar');
+  const nav = document.getElementById('navbar');
+  const linksWrap = document.querySelector<HTMLElement>('[data-nav-links]');
+  const indicator = document.querySelector<HTMLElement>('[data-nav-indicator]');
+  const progress = document.querySelector<HTMLElement>('[data-nav-progress]');
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-spy]'));
 
-  if (navbar) {
-    const updateNavbar = () => {
-      if (window.scrollY > 20) {
-        navbar.classList.add('shadow-xl', 'bg-brand-black/95');
-        navbar.classList.remove('bg-brand-black/80');
-      } else {
-        navbar.classList.remove('shadow-xl', 'bg-brand-black/95');
-        navbar.classList.add('bg-brand-black/80');
-      }
+  if (nav) {
+    // ---------- Compactar / ocultar al hacer scroll ----------
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const menuOpen = document.documentElement.dataset.menuOpen === 'true';
+
+      nav.dataset.scrolled = String(y > 24);
+
+      // Oculta al bajar (pasado el hero), muestra al subir
+      if (!menuOpen && y > window.innerHeight * 0.6 && y > lastY + 4) nav.dataset.hidden = 'true';
+      else if (menuOpen || y < lastY - 4 || y < window.innerHeight * 0.6) nav.dataset.hidden = 'false';
+      lastY = y;
+
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress?.style.setProperty('--progress', String(max > 0 ? y / max : 0));
     };
 
-    window.addEventListener('scroll', updateNavbar, { passive: true });
-    updateNavbar();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+
+    // Mostrar la barra si un elemento de ella recibe foco con el teclado
+    nav.addEventListener('focusin', () => (nav.dataset.hidden = 'false'));
+  }
+
+  // ---------- Subrayado deslizante + sección activa ----------
+  if (linksWrap && indicator && links.length) {
+    let current: HTMLAnchorElement | null = null;
+
+    const moveTo = (link: HTMLAnchorElement | null) => {
+      if (!link) {
+        indicator.style.setProperty('--o', '0');
+        return;
+      }
+      indicator.style.setProperty('--x', `${link.offsetLeft}px`);
+      indicator.style.setProperty('--w', `${link.offsetWidth}px`);
+      indicator.style.setProperty('--o', '1');
+    };
+
+    links.forEach((link) => {
+      link.addEventListener('mouseenter', () => moveTo(link));
+      link.addEventListener('focus', () => moveTo(link));
+    });
+    linksWrap.addEventListener('mouseleave', () => moveTo(current));
+
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.spy ?? ''))
+      .filter((s): s is HTMLElement => Boolean(s));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const link = links.find((l) => l.dataset.spy === entry.target.id) ?? null;
+          links.forEach((l) => l.setAttribute('aria-current', String(l === link)));
+          current = link;
+          if (!linksWrap.matches(':hover')) moveTo(current);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    sections.forEach((s) => observer.observe(s));
+
+    // Al volver al hero no hay sección activa
+    const hero = document.getElementById('inicio');
+    if (hero) {
+      new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            current = null;
+            links.forEach((l) => l.setAttribute('aria-current', 'false'));
+            if (!linksWrap.matches(':hover')) moveTo(null);
+          }
+        },
+        { threshold: [0.5] },
+      ).observe(hero);
+    }
   }
 </script>
