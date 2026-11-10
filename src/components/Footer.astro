@@ -1,58 +1,41 @@
 ---
 /**
- * Pie de página: logo, redes sociales, enlaces y datos de contacto.
+ * Pie de página: marca, enlaces, contacto y una firma gigante "El Flaquito"
+ * cuyas letras suben una a una al llegar al final de la página.
  * Los datos se editan en src/config/site.ts
  */
 import { site } from '../config/site';
+import { whatsappLink } from '../lib/whatsapp';
 
 const year = new Date().getFullYear();
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.contact.address + ', Lima, Perú')}`;
+const letras = Array.from(site.name);
 ---
 
-<footer class="bg-[#050505] pt-16 pb-8 border-t border-white/5 relative overflow-hidden">
-  <div class="absolute inset-0 bg-texture opacity-10 mix-blend-overlay pointer-events-none"></div>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 mb-12">
-      <div class="col-span-1 lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-        <img
-          src={site.logo}
-          alt={`${site.name} Logo Footer`}
-          loading="lazy"
-          decoding="async"
-          class="h-14 md:h-16 w-auto object-contain mb-6 opacity-90 hover:opacity-100 transition-opacity drop-shadow-md"
-        />
-        <p class="text-brand-gray text-sm mb-6 font-light leading-relaxed">
+<footer class="foot" data-foot>
+  <div class="foot-inner">
+    <div class="foot-grid">
+      <!-- Marca -->
+      <div class="foot-brand">
+        <a href="#inicio" class="foot-logo" aria-label={`${site.name}, volver al inicio`}>
+          <img src={site.logo} alt="" width="986" height="820" loading="lazy" decoding="async" />
+        </a>
+        <p class="foot-about">
           Distribución mayorista de carnes y embutidos para el sector gastronómico. Calidad premium garantizada en cada
           corte.
         </p>
-
-        <div class="flex space-x-3">
+        <ul class="foot-social">
           {
             site.social.map((red) => (
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={red.url}
-                aria-label={`${red.name} de ${site.name}`}
-                class={`w-9 h-9 rounded-sm bg-brand-dark border border-white/10 flex items-center justify-center text-brand-gray ${red.hoverClass} transition-all duration-300`}
-              >
-                <i class={red.icon} />
-              </a>
-            ))
-          }
-        </div>
-      </div>
-
-      <div class="col-span-1 md:col-span-1 lg:col-span-3 lg:col-start-6" data-aos="fade-up" data-aos-delay="200">
-        <h3 class="text-brand-white font-heading font-bold uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-          <span class="w-4 h-[1px] bg-brand-gold"></span> Explorar
-        </h3>
-        <ul class="space-y-3">
-          {
-            site.nav.map((item) => (
               <li>
-                <a href={item.href} class="text-brand-gray hover:text-brand-gold transition-colors text-sm font-light">
-                  {item.footerLabel}
+                <a
+                  href={red.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${red.name} de ${site.name}`}
+                  class="foot-social-link"
+                >
+                  <i class={red.icon} aria-hidden="true" />
                 </a>
               </li>
             ))
@@ -60,46 +43,362 @@ const year = new Date().getFullYear();
         </ul>
       </div>
 
-      <div class="col-span-1 md:col-span-2 lg:col-span-4" data-aos="fade-up" data-aos-delay="300">
-        <h3 class="text-brand-white font-heading font-bold uppercase tracking-widest mb-6 text-sm flex items-center gap-2">
-          <span class="w-4 h-[1px] bg-brand-gold"></span> Contáctanos
-        </h3>
-        <ul class="space-y-4">
-          <li class="flex items-start gap-4 text-brand-gray hover:text-brand-white transition-colors group cursor-default">
-            <div
-              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
-            >
-              <i class="fa-solid fa-location-dot text-brand-gold text-xs"></i>
-            </div>
-            <span class="text-sm font-light mt-1">{site.contact.address}</span>
+      <!-- Explorar -->
+      <nav class="foot-col" aria-label="Pie de página">
+        <h2 class="foot-title font-heading">Explorar</h2>
+        <ul class="foot-links">
+          {
+            site.nav.map((item) => (
+              <li>
+                <a href={item.href} class="foot-link">
+                  {item.footerLabel}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={encodeURI(site.catalogoPdf.href)} class="foot-link" download>
+              Catálogo en PDF <span class="foot-meta">{site.catalogoPdf.peso}</span>
+            </a>
           </li>
-          <li class="flex items-center gap-4 text-brand-gray hover:text-brand-white transition-colors group">
-            <div
-              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
-            >
-              <i class="fa-solid fa-envelope text-brand-gold text-xs"></i>
-            </div>
-            <a href={`mailto:${site.contact.email}`} class="text-sm font-light">{site.contact.email}</a>
+        </ul>
+      </nav>
+
+      <!-- Contacto -->
+      <div class="foot-col foot-col--contact">
+        <h2 class="foot-title font-heading">Contáctanos</h2>
+        <ul class="foot-contact">
+          <li>
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+            <a href={whatsappLink(site.whatsappMessages.general)} target="_blank" rel="noopener noreferrer" class="foot-link">
+              {site.contact.phoneDisplay}
+            </a>
           </li>
-          <li class="flex items-center gap-4 text-brand-gray hover:text-brand-white transition-colors group">
-            <div
-              class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-white/5 group-hover:border-brand-gold/30 shrink-0"
-            >
-              <i class="fa-solid fa-phone text-brand-gold text-xs"></i>
-            </div>
-            <a href={`tel:+${site.contact.whatsapp}`} class="text-sm font-light">{site.contact.phoneDisplay}</a>
+          <li>
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            <a href={`mailto:${site.contact.email}`} class="foot-link foot-link--break">{site.contact.email}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <a href={mapa} target="_blank" rel="noopener noreferrer" class="foot-link foot-address">
+              {site.contact.address}
+              <span class="foot-meta">Ver en el mapa <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+            </a>
           </li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-brand-gray/40 text-xs font-light tracking-wide text-center md:text-left">
-        &copy; {year} {site.name} - Embutidos Premium. Todos los derechos reservados.
-      </p>
-      <p class="text-brand-gray/50 text-[10px] md:text-xs flex items-center gap-2 font-light tracking-widest uppercase">
-        Exclusivo para <span class="bg-[#141414] px-2 py-1 rounded-sm border border-white/5 font-bold text-brand-gold">B2B</span>
-      </p>
+    <!-- Barra inferior -->
+    <div class="foot-bar">
+      <p>&copy; {year} {site.name} · <span class="foot-slogan">{site.slogan}</span></p>
+      <p>Atención exclusiva para negocios <strong>B2B</strong></p>
+      <a href="#inicio" class="foot-top">
+        Volver arriba <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+      </a>
     </div>
   </div>
+
+  <!-- Firma gigante -->
+  <p class="foot-sign font-heading" aria-hidden="true">
+    {letras.map((l, i) => <span style={`--i: ${i}`}>{l === ' ' ? ' ' : l}</span>)}
+  </p>
 </footer>
+
+<style>
+  .foot {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 100%, rgb(142 22 0 / 0.22), transparent 70%),
+      #050505;
+    color: #9ca3af;
+  }
+
+  .foot-inner {
+    max-width: 80rem;
+    margin-inline: auto;
+    padding: 4.5rem 1rem 0;
+  }
+
+  @media (min-width: 640px) {
+    .foot-inner {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .foot-inner {
+      padding: 6rem 2rem 0;
+    }
+  }
+
+  /* ---------- Columnas ---------- */
+  .foot-grid {
+    display: grid;
+    gap: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .foot-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .foot-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .foot-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+      gap: 4rem;
+    }
+
+    .foot-brand {
+      grid-column: auto;
+    }
+  }
+
+  .foot-logo {
+    display: inline-block;
+    border-radius: 4px;
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .foot-logo img {
+    width: auto;
+    height: 4.5rem;
+  }
+
+  .foot-logo:hover {
+    transform: rotate(-4deg) scale(1.04);
+  }
+
+  .foot-logo:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+  }
+
+  .foot-about {
+    max-width: 24rem;
+    margin-top: 1.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .foot-social {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .foot-social-link {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.05);
+    color: #f9fafb;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.4s var(--ease-out);
+  }
+
+  .foot-social-link:hover {
+    background: var(--gold);
+    color: #0a0a0a;
+    transform: translateY(-3px);
+  }
+
+  .foot-social-link:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  .foot-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .foot-links,
+  .foot-contact {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.5rem;
+  }
+
+  .foot-link {
+    font-size: 0.9375rem;
+    color: rgb(249 250 251 / 0.8);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 5px;
+    transition:
+      color 0.3s ease,
+      text-decoration-color 0.3s ease;
+  }
+
+  .foot-link:hover {
+    color: #f9fafb;
+    text-decoration-color: var(--gold);
+  }
+
+  .foot-link:focus-visible,
+  .foot-top:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .foot-link--break {
+    overflow-wrap: anywhere;
+  }
+
+  .foot-meta {
+    margin-left: 0.4rem;
+    font-size: 0.8125rem;
+    color: #9ca3af;
+  }
+
+  .foot-contact li {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .foot-contact i {
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--gold);
+  }
+
+  .foot-address {
+    text-transform: capitalize;
+    line-height: 1.6;
+  }
+
+  .foot-address .foot-meta {
+    display: block;
+    margin: 0.35rem 0 0;
+    text-transform: none;
+  }
+
+  .foot-address .foot-meta i {
+    margin: 0 0 0 0.25rem;
+    font-size: 0.7rem;
+    color: inherit;
+  }
+
+  /* ---------- Barra inferior ---------- */
+  .foot-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: 4rem;
+    font-size: 0.8125rem;
+    color: rgb(156 163 175 / 0.8);
+  }
+
+  .foot-slogan {
+    color: var(--gold);
+  }
+
+  .foot-bar strong {
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .foot-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #f9fafb;
+    transition: color 0.3s ease;
+  }
+
+  .foot-top i {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--red);
+    color: #f9fafb;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .foot-top:hover {
+    color: var(--gold);
+  }
+
+  .foot-top:hover i {
+    transform: translateY(-4px);
+  }
+
+  /* ---------- Firma gigante ---------- */
+  .foot-sign {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0 -0.22em;
+    font-size: 18.5vw;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: clamp(1px, 0.12vw, 2px) rgb(197 160 89 / 0.8);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .foot-sign span {
+    display: inline-block;
+    transition:
+      transform 1s var(--ease-out),
+      opacity 0.8s ease;
+    transition-delay: calc(var(--i) * 0.05s);
+  }
+
+  :global(html.js) .foot:not([data-in]) .foot-sign span {
+    opacity: 0;
+    transform: translateY(45%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foot-sign span {
+      transition: none;
+    }
+
+    :global(html.js) .foot .foot-sign span {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const foot = document.querySelector<HTMLElement>('[data-foot]');
+  const sign = foot?.querySelector<HTMLElement>('.foot-sign');
+  if (foot && sign) {
+    new IntersectionObserver(
+      (entries, obs) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          foot.setAttribute('data-in', '');
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    ).observe(sign);
+  }
+</script>
