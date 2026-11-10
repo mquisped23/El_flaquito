@@ -1,7 +1,6 @@
 ---
 /**
- * Pie de página: marca, enlaces, contacto y una firma gigante "El Flaquito"
- * cuyas letras suben una a una al llegar al final de la página.
+ * Pie de página: marca, enlaces, contacto y barra inferior.
  * Los datos se editan en src/config/site.ts
  */
 import { site } from '../config/site';
@@ -9,7 +8,6 @@ import { whatsappLink } from '../lib/whatsapp';
 
 const year = new Date().getFullYear();
 const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.contact.address + ', Lima, Perú')}`;
-const letras = Array.from(site.name);
 ---
 
 <footer class="foot" data-foot>
@@ -98,11 +96,6 @@ const letras = Array.from(site.name);
       </a>
     </div>
   </div>
-
-  <!-- Firma gigante -->
-  <p class="foot-sign font-heading" aria-hidden="true">
-    {letras.map((l, i) => <span style={`--i: ${i}`}>{l === ' ' ? ' ' : l}</span>)}
-  </p>
 </footer>
 
 <style>
@@ -118,7 +111,7 @@ const letras = Array.from(site.name);
   .foot-inner {
     max-width: 80rem;
     margin-inline: auto;
-    padding: 4.5rem 1rem 0;
+    padding: 4.5rem 1rem 2.5rem;
   }
 
   @media (min-width: 640px) {
@@ -129,7 +122,7 @@ const letras = Array.from(site.name);
 
   @media (min-width: 1024px) {
     .foot-inner {
-      padding: 6rem 2rem 0;
+      padding: 6rem 2rem 3rem;
     }
   }
 
@@ -344,61 +337,4 @@ const letras = Array.from(site.name);
   .foot-top:hover i {
     transform: translateY(-4px);
   }
-
-  /* ---------- Firma gigante ---------- */
-  .foot-sign {
-    display: flex;
-    justify-content: center;
-    margin: 2.5rem 0 -0.22em;
-    font-size: 18.5vw;
-    font-weight: 700;
-    font-style: italic;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-    color: transparent;
-    -webkit-text-stroke: clamp(1px, 0.12vw, 2px) rgb(197 160 89 / 0.8);
-    user-select: none;
-    pointer-events: none;
-  }
-
-  .foot-sign span {
-    display: inline-block;
-    transition:
-      transform 1s var(--ease-out),
-      opacity 0.8s ease;
-    transition-delay: calc(var(--i) * 0.05s);
-  }
-
-  :global(html.js) .foot:not([data-in]) .foot-sign span {
-    opacity: 0;
-    transform: translateY(45%);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .foot-sign span {
-      transition: none;
-    }
-
-    :global(html.js) .foot .foot-sign span {
-      opacity: 1;
-      transform: none;
-    }
-  }
 </style>
-
-<script>
-  const foot = document.querySelector<HTMLElement>('[data-foot]');
-  const sign = foot?.querySelector<HTMLElement>('.foot-sign');
-  if (foot && sign) {
-    new IntersectionObserver(
-      (entries, obs) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          foot.setAttribute('data-in', '');
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    ).observe(sign);
-  }
-</script>
