@@ -49,6 +49,9 @@ export const site = {
     flotante: 'Hola, vengo de la página web y necesito información.',
     /** Botón "Consultar precio" de cada producto del catálogo. */
     producto: (nombre: string) => `Hola 😊, me gustaría recibir información y precio de: ${nombre}.`,
+    /** Botón de la sección "¿Qué negocio vas a abastecer?". */
+    negocio: (quien: string, productos: string[]) =>
+      `Hola 😊, tengo ${quien} y me gustaría cotizar: ${productos.join(', ')}.`,
   },
 
   social: [
@@ -81,6 +84,6 @@ export const site = {
   nav: [
     { href: '#catalogo', label: 'Catálogo', mobileLabel: 'Catálogo B2B', footerLabel: 'Catálogo de Productos' },
     { href: '#nosotros', label: 'Tradición', mobileLabel: 'Nuestra Tradición', footerLabel: 'Nuestra Historia' },
-    { href: '#certificaciones', label: 'Calidad', mobileLabel: 'Sello de Calidad', footerLabel: 'Garantía de Calidad' },
+    { href: '#negocios', label: 'Tu negocio', mobileLabel: 'Para tu negocio', footerLabel: 'Para tu negocio' },
   ],
 } as const;
