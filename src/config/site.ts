@@ -52,6 +52,13 @@ export const site = {
     /** Botón de la sección "¿Qué negocio vas a abastecer?". */
     negocio: (quien: string, productos: string[]) =>
       `Hola 😊, tengo ${quien} y me gustaría cotizar: ${productos.join(', ')}.`,
+    /** Nota de pedido del cierre: negocio (opcional) y productos marcados. */
+    pedido: (quien: string, productos: string[]) => {
+      const yo = quien ? `tengo ${quien} y ` : '';
+      return productos.length
+        ? `Hola 😊, ${yo}me gustaría cotizar: ${productos.join(', ')}.`
+        : `Hola 😊, ${yo}me gustaría recibir la lista de precios mayoristas de El Flaquito.`;
+    },
   },
 
   social: [
