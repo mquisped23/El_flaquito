@@ -165,11 +165,11 @@
 }
 
 .btn-sub {
-  font-size: 0.72em;
+  font-size: max(0.72em, 11px);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: none;
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 /* ---------- Primario: rojo con relieve ---------- */
