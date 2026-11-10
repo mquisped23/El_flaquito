@@ -1,6 +1,8 @@
 ---
 /**
  * Botón flotante de WhatsApp (esquina inferior derecha).
+ * Se oculta cuando ya hay botones de WhatsApp a la vista (llamada final y
+ * pie de página), para no tapar el contenido ni repetir la acción.
  */
 import { site } from '../config/site';
 import { whatsappLink } from '../lib/whatsapp';
@@ -10,8 +12,33 @@ import { whatsappLink } from '../lib/whatsapp';
   href={whatsappLink(site.whatsappMessages.flotante)}
   target="_blank"
   rel="noopener noreferrer"
-  aria-label="Contactar por WhatsApp"
-  class="fixed bottom-6 right-6 z-50 bg-brand-gold text-brand-black w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(197,160,89,0.4)] hover:scale-110 hover:bg-brand-goldHover transition-all duration-300 cursor-pointer group border border-brand-goldHover"
+  aria-label="Cotizar por WhatsApp"
+  class="wa-float fixed bottom-6 right-6 z-50 bg-brand-gold text-brand-black w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(197,160,89,0.4)] hover:scale-110 hover:bg-brand-goldHover transition-all duration-300 cursor-pointer group border border-brand-goldHover"
+  data-wa-float
 >
   <i class="fa-brands fa-whatsapp group-hover:animate-pulse"></i>
 </a>
+
+<style>
+  .wa-float[data-hidden] {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.8);
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const float = document.querySelector<HTMLElement>('[data-wa-float]');
+  const zonas = Array.from(document.querySelectorAll<HTMLElement>('[data-ticket], [data-foot]'));
+  if (float && zonas.length) {
+    const visibles = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visibles.add(e.target) : visibles.delete(e.target)));
+      const ocultar = visibles.size > 0;
+      float.toggleAttribute('data-hidden', ocultar);
+      if (ocultar) float.setAttribute('tabindex', '-1');
+      else float.removeAttribute('tabindex');
+    });
+    zonas.forEach((z) => io.observe(z));
+  }
+</script>
