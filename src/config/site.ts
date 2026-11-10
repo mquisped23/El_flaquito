@@ -17,7 +17,7 @@ export const site = {
     description:
       'Distribución B2B de carnes, hamburguesas y embutidos premium para el sector gastronómico. Calidad garantizada, cadena de frío y entregas rápidas.',
     keywords:
-      'carnes premium, embutidos, hamburguesas B2B, distribución de carnes, tomahawk, salchicha frankfurt, restaurantes, proveedores de carne',
+      'hamburguesa de pollo, hamburguesa de carne, chorizo en tripa, choriburguer, salchicha huachana, embutidos, distribuidor de carnes en Lima, proveedor de hamburguesas para restaurantes, embutidos al por mayor, El Flaquito',
     ogTitle: 'El Flaquito | Carnes y Embutidos Premium',
     ogDescription:
       'Abastece tu restaurante con nuestro catálogo de carnes y embutidos de alta gama. Solicita tu cotización.',
