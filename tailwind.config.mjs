@@ -21,9 +21,9 @@ export default {
         display: ['Playfair Display', 'serif'],
       },
       backgroundImage: {
-        'hero-pattern':
-          "linear-gradient(to bottom, rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.95)), url('https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=2070&auto=format&fit=crop')",
-        texture: "url('https://www.transparenttextures.com/patterns/dark-matter.png')",
+        // Grano fino generado en el propio CSS (antes venía de un sitio externo que podía fallar)
+        texture:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
       },
     },
   },
