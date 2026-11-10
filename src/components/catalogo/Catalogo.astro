@@ -202,7 +202,9 @@ const dots = productos.map((_, k) => {
   .cat-vignette {
     background:
       radial-gradient(ellipse 60% 70% at 72% 52%, rgb(142 22 0 / 0.16), transparent 70%),
-      radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgb(0 0 0 / 0.65) 100%);
+      /* "at 50% 49%" y no "at 50% 50%": con el centro exacto, Vite acorta a "90% 80%" y
+         autoprefixer lo confunde con la sintaxis antigua (aviso en la consola) */
+      radial-gradient(ellipse 90% 80% at 50% 49%, transparent 40%, rgb(0 0 0 / 0.65) 100%);
   }
 
   /* ---------- Diapositiva (sin JS: apiladas) ---------- */
