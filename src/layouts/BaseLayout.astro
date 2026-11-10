@@ -1,10 +1,9 @@
 ---
 /**
- * Layout base: estructura <html>, <head>, estilos globales y animaciones AOS.
+ * Layout base: estructura <html>, <head> y estilos globales.
  * Todas las páginas se envuelven con este layout.
  */
 import Head from '../components/Head.astro';
-import 'aos/dist/aos.css';
 import '../styles/global.css';
 
 interface Props {
@@ -23,11 +22,5 @@ const { title, description } = Astro.props;
 
   <body class="bg-brand-black text-brand-white font-sans antialiased relative selection:bg-brand-red selection:text-white">
     <slot />
-
-    <script>
-      import AOS from 'aos';
-
-      AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
-    </script>
   </body>
 </html>
